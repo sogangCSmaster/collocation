@@ -28,14 +28,14 @@ class PMI3:
         if abc == None: return -1
         return abc / (2 * math.log(self.nTotal / self.getCoOccurrence(a, b, c)))
 
-    def getPMIDict(self, minNum = 5):
+    def getPMIDict(self, minNum = 2):
         ret = {}
         for a, b, c in self.dictTriCount:
             if self.dictTriCount[a, b, c] < minNum: continue
             ret[a, b, c] = self.getPMI(a, b, c)
         return ret
 
-    def getNPMIDict(self, minNum = 5):
+    def getNPMIDict(self, minNum = 2):
         ret = {}
         for a, b, c in self.dictTriCount:
             if self.dictTriCount[a, b, c] < minNum: continue
@@ -48,13 +48,13 @@ class SentenceReader:
   
     def __iter__(self):
         for line in open(self.filepath, encoding='utf-8'):
-            yield list(s.split('\t'))
+            yield list(line.split(' '))
 
 
 # Read from test.txt
 pc = PMI3()
 pc.train(SentenceReader('test.txt'))
-# The normalized informations are calculated and printed in descending order for collocation appearing five or more times.
+# The normalized informations are calculated and printed in descending order for collocation appearing three or more times.
 res = pc.getNPMIDict()
 for a, b, c in sorted(res, key=res.get, reverse=True):
     print(a, b, c, res[a, b, c])
